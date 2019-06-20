@@ -16,7 +16,7 @@ Instance show_binary : forall (prec emax : Z), Show (binary_float prec emax) := 
               | B754_infinity true => "-inf"
               | B754_nan false _ _ => "+NaN"
               | B754_nan true _ _ => "-NaN"
-              | B754_finite s m e _ => (if s then "+" else "-")
+              | B754_finite s m e _ => (if s then "" else "-")
                                         ++ (show_Z (Z.pos m))
                                         ++ (show_Z e)
             end
@@ -37,7 +37,7 @@ Definition infg (prec emax : Z) :=
 
 Definition nang (prec emax : Z) 
         (pl : positive) 
-        (np : nan_pl prec 1 = true) := 
+        (np : nan_pl prec pl = true) := 
   (liftGen (fun b => B754_nan prec emax b pl np))
     (choose (true, false)).
 
@@ -59,19 +59,31 @@ Program Definition fing (prec emax : Z)
 Next Obligation.
 Admitted.
 
+Theorem fing32_prec : FLX.Prec_gt_0 24.
+Proof. unfold FLX.Prec_gt_0; reflexivity. Qed.
+
+Theorem fing32_prec_emax : 24 < 128.
+Proof. reflexivity. Qed.
+
 Definition zerg32 := zerg 24 128.
 Definition infg32 := infg 24 128.
-Definition nang32 := nang 24 128 nan1.
-Definition fing32 := fing 24 128.
+Program Definition nang32 := nang 24 128 1 _.
+Definition fing32 := fing 24 128 fing32_prec fing32_prec_emax.
 
 Definition binary32_gen : G (binary32) :=
   freq_ zerg32 [(1, zerg32)%nat ; (1, infg32)%nat ;
                 (1, nang32)%nat ; (7, fing32)%nat].
 
+Theorem fing64_prec : FLX.Prec_gt_0 53.
+Proof. unfold FLX.Prec_gt_0; reflexivity. Qed.
+
+Theorem fing64_prec_emax : 53 < 1024.
+Proof. reflexivity. Qed.
+
 Definition zerg64 := zerg 53 1024.
 Definition infg64 := infg 53 1024.
-Definition nang64 := nang 53 1024 nan1.
-Definition fing64 := fing 53 1024.
+Program Definition nang64 := nang 53 1024 1 _.
+Definition fing64 := fing 53 1024 fing64_prec fing64_prec_emax.
 
 Definition binary64_gen : G (binary64) :=
   freq_ zerg64 [(1, zerg64)%nat ; (1, infg64)%nat ;
