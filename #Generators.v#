@@ -67,13 +67,12 @@ Proof. reflexivity. Qed.
 Definition zerg32 := zerg 24 128.
 Definition infg32 := infg 24 128.
 Definition nang32 (pl : positive) (np : nan_pl 24 pl = true) 
-  := nang 24 128 pl np.
+  := nang 24 128 1 np.
 Definition fing32 := fing 24 128 fing32_prec fing32_prec_emax.
 
-Definition binary32_gen (pl : positive) (np : nan_pl 24 pl) 
-  : G (binary32) :=
+Definition binary32_gen : G (binary32) :=
   freq_ zerg32 [(1, zerg32)%nat ; (1, infg32)%nat ;
-                (1, nang32 pl np)%nat ; (7, fing32)%nat].
+                (1, nang32)%nat ; (7, fing32)%nat].
 
 Theorem fing64_prec : FLX.Prec_gt_0 53.
 Proof. unfold FLX.Prec_gt_0; reflexivity. Qed.
@@ -83,10 +82,9 @@ Proof. reflexivity. Qed.
 
 Definition zerg64 := zerg 53 1024.
 Definition infg64 := infg 53 1024.
-Definition nang64 (pl : positive) (np : nan_pl 53 pl = true) 
-  := nang 53 1024 pl np.
+Program Definition nang64 := nang 53 1024 1 _.
 Definition fing64 := fing 53 1024 fing64_prec fing64_prec_emax.
 
 Definition binary64_gen : G (binary64) :=
   freq_ zerg64 [(1, zerg64)%nat ; (1, infg64)%nat ;
-                (1, nang64 pl np)%nat ; (7, fing64)%nat].
+                (1, nang64)%nat ; (7, fing64)%nat].
