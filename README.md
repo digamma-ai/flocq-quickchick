@@ -8,11 +8,11 @@ instructions to install from OPAM, when I'll add OPAM package for this
 ```
 ###### From source
 ```
-# You need to install QuickChick and Coq (if you haven't already)
+# You need to install Coq, QuickChick and Flocq (if you haven't already)
 opam repo add coq-released https://coq.inria.fr/opam/released
 opam update
-# Install coq and coq-quickchick packages
-opam install coq coq-quickchick
+# Install coq and coq-quickchick packages and flocq
+opam install coq coq-quickchick flocq
 
 # Then:
 make && make install
