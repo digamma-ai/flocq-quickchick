@@ -5,13 +5,19 @@ synopsis: "Flocq binary_float generators for QuickChick testing framework"
 maintainer: "Yaroslav Kogevnikov <ykozhevnikov@codeminders.com>"
 authors: "Yaroslav Kogevnikov <ykozhevnikov@codeminders.com>"
 license: "MIT"
+homepage: "https://github.com/digamma-ai/flocq-quickchick"
+bug-reports: "https://github.com/digamma-ai/flocq-quickchick/issues"
 depends: [
   "coq" {>= "8.8.2"}
-  "coq-quickchick"
-  "coq-flocq"
+  "coq-quickchick" {>= "1.0.2"}
+  "coq-flocq" {>= "3.1.0"}
 ]
-build: make
+build: [
+  ["./configure.sh"]
+  [make]
+]
 install: [make "install"]
+dev-repo: "git+https://github.com/digamma-ai/flocq-quickchick.git"
 url {
   src: "https://github.com/digamma-ai/flocq-quickchick.git"
 }
