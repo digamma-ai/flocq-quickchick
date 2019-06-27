@@ -1,5 +1,5 @@
 Require Import FlocqQuickChick.Generators.
-Require Import Flocq.IEEE754.Binary.
+Require Import Flocq.IEEE754.Binary Bool.Bool.
 From QuickChick Require Import QuickChick.
 
 Definition Float_maxnum {prec emax} (a b : binary_float prec emax) :=
@@ -21,4 +21,7 @@ Definition pair_fin32_gen : G (binary32 * binary32) :=
     bindGen (fing32) (fun b2 =>
       returnGen (b1, b2))).
 
-QuickCheck (forAll pair_fin32_gen (fun '(b1, b2) => maxnum_correct b1 b2)).
+QuickCheck (forAll pair_fin32_gen 
+                   (fun '(b1, b2) => maxnum_correct b1 b2 &&
+                                  maxnum_correct b1 b1 &&
+                                  maxnum_correct b2 b2)).
