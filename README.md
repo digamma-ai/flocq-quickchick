@@ -1,25 +1,29 @@
 # flocq-quickchick
+
 Flocq binary float generators for QuickChick
 
-## Getting Started
-###### From OPAM
+## Installation
+### From OPAM
 ```
-instructions to install from OPAM, when I'll add OPAM package for this
+opam install coq-flocq-quickchick
 ```
-###### From source
-```
-# You need to install Coq, QuickChick and Flocq (if you haven't already)
-opam repo add coq-released https://coq.inria.fr/opam/released
-opam update
-# Install coq and coq-quickchick packages and flocq
-opam install coq coq-quickchick flocq
 
-# Then:
+### From source
+Install dependencies:
+
+```
+opam repo add coq-released https://coq.inria.fr/opam/released
+opam install coq coq-quickchick coq-flocq
+```
+
+Then:
+```
+coq_makefile -f _CoqProject -o Makefile 
 make && make install
 ```
 
 ## Simple Example
-* `Example.v`
+[Example.v](Example.v)
 
 ## Documentation
 All generators and sub-generators have comments

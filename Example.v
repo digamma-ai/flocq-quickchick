@@ -1,4 +1,4 @@
-Require Import Generators.
+Require Import FlocqQuickChick.Generators.
 Require Import ZArith PArith Bool.BoolEq List.
 Require Import Flocq.IEEE754.Binary.
 Import ListNotations.

@@ -1,5 +1,5 @@
 opam-version: "2.0"
-name: "flocq-quickchick"
+name: "coq-flocq-quickchick"
 version: "~dev"
 synopsis: "Flocq binary_float generators for QuickChick testing framework"
 maintainer: "Yaroslav Kogevnikov <ykozhevnikov@codeminders.com>"
@@ -13,7 +13,7 @@ depends: [
   "coq-flocq" {>= "3.1.0"}
 ]
 build: [
-  ["./configure.sh"]
+  ["coq_makefile" "-f" "_CoqProject"  "-o" "Makefile"]
   [make]
 ]
 install: [make "install"]
