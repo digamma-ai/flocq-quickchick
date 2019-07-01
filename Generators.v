@@ -91,14 +91,17 @@ Qed.
 Definition binary32 := binary_float 24 128.
 Definition binary64 := binary_float 53 1024.
 
+(* Generates B754_zero values *)
 Definition zerg (prec emax : Z) := 
   (liftGen (fun (s : bool) => B754_zero prec emax s)) 
     (choose (true, false)).
 
+(* Generates B754_infinity values *)
 Definition infg (prec emax : Z) := 
   (liftGen (fun (s : bool) => B754_infinity prec emax s))
     (choose (true, false)).
 
+(* Generates B754_nan values. Needs payload and nan_pl proof *)
 Definition nang (prec emax : Z) 
         (pl : positive) 
         (np : nan_pl prec pl = true) := 
@@ -110,6 +113,7 @@ Definition boundaries (prec emax : Z) (t : bool) :=
       then (1, 2^prec - 1, 3 - emax - prec, 3 - emax - prec)%Z 
       else (2^(prec - 1), 2^prec - 1, 3 - emax - prec, emax - prec)%Z.
 
+(* Generates B754_finite values. Needs prec_gt_0 Hmax proof *)
 Program Definition fing (prec emax : Z) 
         (prec_gt_0 : Flocq.Core.FLX.Prec_gt_0 prec)
         (Hmax : (prec < emax)%Z) : G (binary_float prec emax) :=
@@ -179,12 +183,14 @@ Proof. unfold FLX.Prec_gt_0; reflexivity. Qed.
 Theorem fing32_prec_emax : 24 < 128.
 Proof. reflexivity. Qed.
 
+(* Set of binary32 sub-generators *)
 Definition zerg32 := zerg 24 128.
 Definition infg32 := infg 24 128.
 Definition nang32 (pl : positive) (np : nan_pl 24 pl = true) 
   := nang 24 128 pl np.
 Definition fing32 := fing 24 128 fing32_prec fing32_prec_emax.
 
+(* Full binary32 generator *)
 Definition binary32_gen (pl : positive) (np : nan_pl 24 pl = true) 
   : G (binary32) :=
   freq_ zerg32 [(1, zerg32)%nat ; (1, infg32)%nat ;
@@ -196,12 +202,14 @@ Proof. unfold FLX.Prec_gt_0; reflexivity. Qed.
 Theorem fing64_prec_emax : 53 < 1024.
 Proof. reflexivity. Qed.
 
+(* Set of binary64 sub-generators *)
 Definition zerg64 := zerg 53 1024.
 Definition infg64 := infg 53 1024.
 Definition nang64 (pl : positive) (np : nan_pl 53 pl = true) 
   := nang 53 1024 pl np.
 Definition fing64 := fing 53 1024 fing64_prec fing64_prec_emax.
 
+(* Full binary64 generator *)
 Definition binary64_gen (pl : positive) (np : nan_pl 53 pl = true)
   : G (binary64) :=
   freq_ zerg64 [(1, zerg64)%nat ; (1, infg64)%nat ;
