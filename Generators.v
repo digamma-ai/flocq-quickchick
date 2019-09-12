@@ -10,7 +10,7 @@ Set Warnings "-extraction-opaque-accessed,-extraction".
     trivial equalities from the context. *)
 Ltac subst_max :=
   repeat match goal with
-           | [ H : ?X = _ |- _ ]  => subst X
+           | [H : ?X = _ |- _ ]  => subst X
            | [H : _ = ?X |- _] => subst X
          end.
 
@@ -39,13 +39,13 @@ Open Scope string.
 
 Instance show_binary : forall (prec emax : Z), Show (binary_float prec emax) := {
   show c := match c with
-              | B754_zero false => "+0"
-              | B754_zero true => "-0"
-              | B754_infinity false => "+inf"
-              | B754_infinity true => "-inf"
-              | B754_nan false _ _ => "+NaN"
-              | B754_nan true _ _ => "-NaN"
-              | B754_finite s m e _ => (if s then "" else "-")
+              | B754_zero _ _ false => "+0"
+              | B754_zero _ _ true => "-0"
+              | B754_infinity _ _ false => "+inf"
+              | B754_infinity _ _ true => "-inf"
+              | B754_nan _ _ false _ _ => "+NaN"
+              | B754_nan _ _ true _ _ => "-NaN"
+              | B754_finite _ _ s m e _ => (if s then "" else "-")
                                         ++ (show_Z (Z.pos m * 2 ^ e))
             end
 }.
