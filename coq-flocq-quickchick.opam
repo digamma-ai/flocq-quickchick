@@ -18,7 +18,8 @@ build: [
 ]
 install: [make "install"]
 dev-repo: "git+https://github.com/digamma-ai/flocq-quickchick.git"
-url {
-  src: "https://github.com/digamma-ai/flocq-quickchick/archive/1.0.0.tar.gz"
-  checksum: "md5=54ce38b1aa1bfbb9dc52709e2be0eb8f"
-}
+
+url : [
+  url : "https://github.com/digamma-ai/flocq-quickchick/archive/1.0.1.tar.gz"
+  checksum : "ced088829a344c127cff792047855168"
+]

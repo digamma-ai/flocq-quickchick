@@ -53,13 +53,13 @@ Instance show_binary : forall (prec emax : Z), Show (binary_float prec emax) := 
 Close Scope string.
 Open Scope Z.
 
-Let log2 := log_inf.
-Let digits := compose Z.succ log2.
+Local Definition log2 := Z.log2.
+Local Definition digits m := (Z.succ (log2 (Z.pos m))).
 
 Lemma digits2_pos_log2 (m : positive) :
-  Z.pos (Digits.digits2_pos m) = Z.succ (log2 m).
+  Z.pos (Digits.digits2_pos m) = Z.succ (log2 (Z.pos m)).
 Proof.
-  induction m; simpl; try (rewrite Pos2Z.inj_succ, IHm); reflexivity.
+  induction m; cbn; f_equal; rewrite Pplus_one_succ_r; reflexivity.
 Qed.
 
 Lemma digits2_pos_digits (m : positive) :
@@ -145,8 +145,8 @@ Next Obligation.
   1,2: rewrite bounded_unfolded.
   all: unfold digits, Basics.compose, Z.succ, FLX.Prec_gt_0.
   all: try lia.
-  1,2: rewrite <-Zlog2_log_inf.
   1,2: rewrite Z2Pos.id.
+  unfold log2.
   2: lia.
   assert (m < 2 ^ prec) by lia; clear B12; rename H into B12.
   rewrite Z.log2_lt_pow2 in B12.
@@ -157,7 +157,7 @@ Next Obligation.
   rewrite Z.log2_lt_pow2 in B12.
   rewrite Z.log2_le_pow2 in B11.
   right.
-  lia.
+  unfold log2; lia.
   (* subgoals *)
   1,2,3: clear Hmax e B21 B22 B12.
   1,2,3: assert (0 <= prec - 1) by lia.
