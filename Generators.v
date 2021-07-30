@@ -1,6 +1,7 @@
 Require Import ZArith PArith Lia List String.
 Require Import Flocq.IEEE754.Binary Flocq.Core.Zaux Flocq.IEEE754.Bits.
 Require Import Basics RelationClasses.
+Require Import BinIntDef.
 Import ListNotations.
 
 From QuickChick Require Import QuickChick.
@@ -53,17 +54,29 @@ Instance show_binary : forall (prec emax : Z), Show (binary_float prec emax) := 
 Close Scope string.
 Open Scope Z.
 
-Let log2 := log_inf.
+Let log2 := Z.log2.
 Let digits := compose Z.succ log2.
 
 Lemma digits2_pos_log2 (m : positive) :
-  Z.pos (Digits.digits2_pos m) = Z.succ (log2 m).
+  Z.pos (Digits.digits2_pos m) = Z.succ (log2 (Zpos m)).
 Proof.
-  induction m; simpl; try (rewrite Pos2Z.inj_succ, IHm); reflexivity.
+  induction m; simpl.
+
+  { rewrite Pos2Z.inj_succ. rewrite IHm.
+    unfold log2, Z.log2.
+    destruct m; cbn; lia.
+  }
+
+  { rewrite Pos2Z.inj_succ. rewrite IHm.
+    unfold log2, Z.log2.
+    destruct m; cbn; lia.
+  }
+
+  reflexivity.
 Qed.
 
 Lemma digits2_pos_digits (m : positive) :
-  Z.pos (Digits.digits2_pos m) = digits m.
+  Z.pos (Digits.digits2_pos m) = digits (Zpos m).
 Proof.
   unfold digits, compose.
   apply digits2_pos_log2.
@@ -75,14 +88,14 @@ Lemma bounded_unfolded (prec emax : Z)
     (m : positive) (e : Z) :
   bounded prec emax m e = true
   <->
-  (digits m < prec /\ e = 3 - emax - prec) \/
-  (digits m = prec /\ 3 - emax - prec <= e <= emax - prec).
+  (digits (Zpos m) < prec /\ e = 3 - emax - prec) \/
+  (digits (Zpos m) = prec /\ 3 - emax - prec <= e <= emax - prec).
 Proof.
   unfold FLX.Prec_gt_0, bounded, canonical_mantissa, FLT.FLT_exp in *.
   rewrite Bool.andb_true_iff, Z.leb_le, <-Zeq_is_eq_bool, digits2_pos_digits.
   remember (3 - emax - prec) as emin.
   split; intro.
-  all: destruct (Z_lt_le_dec (digits m + e - prec) emin).
+  all: destruct (Z_lt_le_dec (digits (Zpos m) + e - prec) emin).
   all: try rewrite Z.max_r in * by lia.
   all: try rewrite Z.max_l in * by lia.
   all: lia.
@@ -145,11 +158,11 @@ Next Obligation.
   1,2: rewrite bounded_unfolded.
   all: unfold digits, Basics.compose, Z.succ, FLX.Prec_gt_0.
   all: try lia.
-  1,2: rewrite <-Zlog2_log_inf.
   1,2: rewrite Z2Pos.id.
   2: lia.
   assert (m < 2 ^ prec) by lia; clear B12; rename H into B12.
   rewrite Z.log2_lt_pow2 in B12.
+  change BinInt.Z.log2 with log2 in B12.
   lia.
   lia.
   (* second main goal *)
@@ -157,6 +170,7 @@ Next Obligation.
   rewrite Z.log2_lt_pow2 in B12.
   rewrite Z.log2_le_pow2 in B11.
   right.
+  change BinInt.Z.log2 with log2 in B12, B11.
   lia.
   (* subgoals *)
   1,2,3: clear Hmax e B21 B22 B12.
